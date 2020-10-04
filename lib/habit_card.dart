@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_habits/bloc/habit_bloc.dart';
 
 import 'package:simple_habits/create_habit.dart';
 import 'package:simple_habits/db/database_providers.dart';
@@ -13,12 +15,10 @@ import 'package:simple_habits/models/habit.dart';
 
 class HabitCard extends StatefulWidget {
   // takes in habit model, delete function, and edit callback
-  HabitCard({Key key, this.habit, this.deleteFunc, this.updateList})
-      : super(key: key);
+  HabitCard({Key key, this.habit, this.deleteFunc}) : super(key: key);
 
-  final Function deleteFunc;
   final Habit habit;
-  final Function updateList;
+  final Function deleteFunc;
 
   @override
   _HabitCard createState() => _HabitCard(habit);
@@ -73,7 +73,11 @@ class _HabitCard extends State<HabitCard> {
       _habit.progress = 0;
     }
 
-    DatabaseProvider.db.update(_habit);
+    DatabaseProvider.db.update(_habit).then(
+          (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+            UpdateHabit(_habit.id, _habit),
+          ),
+        );
   }
 
   // checks selected weekdays and pushes weekly notifications for those days
@@ -101,7 +105,7 @@ class _HabitCard extends State<HabitCard> {
   }
 
   // called every time the check button is pressed
-  void _incrementProgress() async {
+  void _incrementProgress() {
     // first calls checkDate to see if it's a new day or not
     checkDate();
     setState(() {});
@@ -112,19 +116,28 @@ class _HabitCard extends State<HabitCard> {
         _habit.isDone = false;
       });
 
-      await DatabaseProvider.db.update(_habit);
+      // updates to database
+      DatabaseProvider.db.update(_habit).then(
+            (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+              UpdateHabit(_habit.id, _habit),
+            ),
+          );
     } else {
       setState(() {
         _habit.progress++;
         _habit.isDone = true;
       });
-
-      await DatabaseProvider.db.update(_habit);
+      // updates to database
+      DatabaseProvider.db.update(_habit).then(
+            (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+              UpdateHabit(_habit.id, _habit),
+            ),
+          );
     }
   }
 
   // toggles reminder notifications
-  void toggleReminders() async {
+  void toggleReminders() {
     // toggle
     if (_habit.reminders) {
       setState(() {
@@ -139,8 +152,11 @@ class _HabitCard extends State<HabitCard> {
     }
 
     // updates to database
-
-    await DatabaseProvider.db.update(_habit);
+    DatabaseProvider.db.update(_habit).then(
+          (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+            UpdateHabit(_habit.id, _habit),
+          ),
+        );
   }
 
   // creates route to edit page with passing current state of habit
@@ -149,7 +165,7 @@ class _HabitCard extends State<HabitCard> {
   }
 
   // callback function to updateCard current state to what's been passed from editing
-  void updateCard(Habit habit) async {
+  void updateCard(Habit habit) {
     _cancelNotifications();
 
     setState(() {
@@ -160,9 +176,11 @@ class _HabitCard extends State<HabitCard> {
       _setNotifications();
     }
 
-    await DatabaseProvider.db.update(_habit);
-
-    widget.updateList();
+    DatabaseProvider.db.update(_habit).then(
+          (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+            UpdateHabit(_habit.id, _habit),
+          ),
+        );
   }
 
   // creates transition to edit page
@@ -195,7 +213,7 @@ class _HabitCard extends State<HabitCard> {
   Widget build(BuildContext context) {
     // Slidable library to implement swipe to delete
     return Container(
-        padding: EdgeInsets.only(top: 5),
+        padding: EdgeInsets.only(top: 5, left: 10, right: 10),
         child: Slidable(
             secondaryActions: [
               Container(

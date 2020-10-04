@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_habits/about_page.dart';
-import 'package:simple_habits/db/database_providers.dart';
+import 'package:simple_habits/bloc/habit_bloc.dart';
 
 import 'package:simple_habits/globals.dart';
-import 'package:simple_habits/habit_card.dart';
 import 'package:simple_habits/create_habit.dart';
+import 'package:simple_habits/habit_list.dart';
 import 'package:simple_habits/models/habit.dart';
 
 void main() {
@@ -25,17 +25,19 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-    return DefaultTabController(
-        length: 2,
-        child: MaterialApp(
-          title: 'Simple Habits',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              primaryColor: Colors.white,
-              textSelectionHandleColor: Colors.white,
-              fontFamily: 'Poppins'),
-          home: MyHomePage(title: 'My Habits'),
-        ));
+    return BlocProvider<HabitBloc>(
+        create: (context) => HabitBloc(),
+        child: DefaultTabController(
+            length: 2,
+            child: MaterialApp(
+              title: 'Simple Habits',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                  primaryColor: Colors.white,
+                  textSelectionHandleColor: Colors.white,
+                  fontFamily: 'Poppins'),
+              home: MyHomePage(title: 'My Habits'),
+            )));
   }
 }
 
@@ -50,7 +52,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Habit> _habitList = [];
   final _dropdownValues = ['Pink', 'Green', 'Blue'];
   String _currentDropdownValue;
 
@@ -69,24 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
     flutterLocalNotificationsPlugin.initialize(initSetttings);
 
     _getColor();
-    updateList();
-  }
-
-  // updates List of Habits
-  void updateList() {
-    DatabaseProvider.db.getHabits().then((list) {
-      setState(() {
-        _habitList = list;
-      });
-    });
-
-    print("Called");
-  }
-
-  // delete habit from db
-  void _removeHabit(int key) async {
-    await DatabaseProvider.db.delete(key);
-    updateList();
   }
 
   // gets color from sharedPreferences and sets state
@@ -99,76 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
       themeColor = Color(value);
       _currentDropdownValue = selection;
     });
-  }
-
-  // build full list of HabitCard
-  Widget _buildAllHabits() {
-    // check if habit's exist at all
-    return _habitList.isEmpty
-        ? Center(
-            child: Text(
-            'You have no habits at all.\nTap the + button to add one!',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ))
-        : ListView.builder(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            itemBuilder: (BuildContext context, int index) {
-              Habit habit = _habitList[index];
-
-              // initialize HabitCard by passing habit model, deleting function and editing callback
-              return HabitCard(
-                  habit: habit,
-                  deleteFunc: () => _removeHabit(habit.id),
-                  updateList: updateList);
-            },
-            itemCount: _habitList.length,
-          );
-  }
-
-  // build list with current day's habits only
-  Widget _buildTodayHabits() {
-    // filtered list by matching day's to current day
-    var filteredList = _habitList.where((element) =>
-        element.days
-            .split(',')
-            .map(int.parse)
-            .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
-        1);
-
-    // first check if filtered list is empty to display text block
-    return filteredList.isEmpty
-        ? Center(
-            child: Text(
-            'You have no habits for ' +
-                new DateFormat('EEEE').format(DateTime.now()) +
-                "s.",
-            style: TextStyle(
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ))
-        : ListView.builder(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            itemBuilder: (BuildContext context, int index) {
-              Habit habit = _habitList[index];
-
-              // returning habitCards if day matches
-              if (habit.days
-                      .split(',')
-                      .map(int.parse)
-                      .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
-                  1) {
-                return HabitCard(
-                    habit: habit,
-                    deleteFunc: () => _removeHabit(habit.id),
-                    updateList: updateList);
-              }
-            },
-            itemCount: _habitList.length,
-          );
   }
 
   @override
@@ -288,9 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
               indicatorColor: themeColor,
               labelColor: themeColor,
               unselectedLabelColor: Colors.black,
-              onTap: (index) {
-                updateList();
-              },
+              onTap: (index) {},
               tabs: [
                 Tab(
                   child: Text("Today"),
@@ -298,11 +209,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Tab(child: Text("All Habits")),
               ],
             )),
-        body: Container(
-          padding: EdgeInsets.only(top: 5, bottom: 5),
-          child: TabBarView(
-            children: [_buildTodayHabits(), _buildAllHabits()],
-          ),
+        body: TabBarView(
+          children: [HabitList(0), HabitList(1)],
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -313,7 +221,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.of(context).push(_createRoute(CreateHabitScreen(
               Habit(),
               0,
-              updateList: updateList,
             )));
           },
         ));

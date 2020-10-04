@@ -78,14 +78,6 @@ class DatabaseProvider {
       habitList.add(habit);
     });
 
-    habitList.sort((a, b) {
-      var x = TimeOfDay.fromDateTime(DateFormat.jm().parse(a.time));
-      var y = TimeOfDay.fromDateTime(DateFormat.jm().parse(b.time));
-
-      return DateTime(0, 0, 0, x.hour, x.minute)
-          .compareTo(DateTime(0, 0, 0, y.hour, y.minute));
-    });
-
     return habitList;
   }
 

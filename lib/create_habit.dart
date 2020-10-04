@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:simple_habits/bloc/habit_bloc.dart';
 import 'package:simple_habits/globals.dart';
 import 'package:simple_habits/models/habit.dart';
 import 'package:weekday_selector/weekday_selector.dart';
@@ -56,7 +58,7 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
   }
 
   // create/update habit
-  void create() async {
+  void create() {
     String days = _weekdayValues.map((i) => i ? 1 : 0.toString()).join(",");
 
     // create habit instance with current values
@@ -71,10 +73,11 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
 
     // storing to database if creating new one
     if (widget.mode == 0) {
-      await DatabaseProvider.db.insert(habit);
-
-      // update list callback
-      widget.updateList();
+      DatabaseProvider.db.insert(habit).then(
+            (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+              AddHabit(storedHabit),
+            ),
+          );
     } else {
       // if updating
       // setting id to the same as the passed _habit instance
