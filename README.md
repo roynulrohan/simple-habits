@@ -8,7 +8,7 @@ The app lets you create habits, set weekly goals, and track daily progress. It i
 be the most practical. I worked on this project to learn Flutter and showcase my skills. Most ToDo apps are very basic looking so I tried to make
 mine more refined with a modern minimalistic UI.
 
-### Development
+## Development
 
 Made with Flutter. Designed everything myself. Used SQFlite to store user data. Could've tried Firebase but I didn't think it was necessary
 for now with this level of data. Used Bloc and native methods(setState) for state management. This is my first time
