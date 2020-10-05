@@ -135,31 +135,21 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               // DRAWER HEADER
-              DrawerHeader(
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Column(
-                    children: [
-                      Expanded(
-                          flex: 2,
-                          child: Text('Simple Habits',
-                              style: TextStyle(fontSize: 20))),
-                      Expanded(
-                          flex: 3,
-                          child: Container(
-                            padding: EdgeInsets.only(bottom: 15),
-                            child:
-                                Image(image: AssetImage('assets/img/icon.png')),
-                          )),
-                      Expanded(
-                          flex: 1,
-                          child: Text('by Roynul Rohan',
-                              style: TextStyle(fontSize: 14)))
-                    ],
+              Container(
+                height: 100,
+                child: DrawerHeader(
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Simple Habits', style: TextStyle(fontSize: 20)),
+                      ],
+                    ),
                   ),
-                ),
-                decoration: BoxDecoration(
-                  color: themeColor,
+                  decoration: BoxDecoration(
+                    color: themeColor,
+                  ),
                 ),
               ),
 

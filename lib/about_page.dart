@@ -11,7 +11,10 @@ class AboutPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 5),
       alignment: Alignment.topCenter,
-      child: Card(elevation: 10, child: child),
+      child: Card(
+          elevation: 10,
+          child:
+              Container(alignment: Alignment.center, height: 80, child: child)),
     );
   }
 
@@ -30,10 +33,10 @@ class AboutPage extends StatelessWidget {
                 children: [Icon(Icons.share, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              title: Text('Share this app', style: TextStyle(fontSize: 16)),
+              title: Text('Share this app', style: TextStyle(fontSize: 14)),
               subtitle: Text(
                 'Send or copy the link',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               ),
               onTap: () {
                 Share.share('https://example.com');
@@ -49,10 +52,10 @@ class AboutPage extends StatelessWidget {
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              title: Text('Rate the App', style: TextStyle(fontSize: 16)),
+              title: Text('Rate the App', style: TextStyle(fontSize: 14)),
               subtitle: Text(
                 'If you like it, consider giving it a rating!',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               ),
               onTap: () {
                 LaunchReview.launch();
@@ -63,10 +66,10 @@ class AboutPage extends StatelessWidget {
                 children: [Icon(Icons.mail, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              title: Text('Contact', style: TextStyle(fontSize: 16)),
+              title: Text('Contact', style: TextStyle(fontSize: 14)),
               subtitle: Text(
                 'For feedback, support, or enquiries',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               ),
               onTap: launchURL,
             )),
@@ -75,8 +78,8 @@ class AboutPage extends StatelessWidget {
                 children: [Icon(Icons.info, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              title: Text('App Version', style: TextStyle(fontSize: 16)),
-              subtitle: Text('1.0.0', style: TextStyle(fontSize: 14)),
+              title: Text('App Version', style: TextStyle(fontSize: 14)),
+              subtitle: Text('1.0.0', style: TextStyle(fontSize: 12)),
             ))
           ]),
         ));
