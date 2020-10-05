@@ -27,12 +27,12 @@ class AboutPage extends StatelessWidget {
           child: Column(children: [
             _makeCard(ListTile(
               leading: Column(
-                children: [Icon(Icons.share,color: themeColor)],
+                children: [Icon(Icons.share, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               title: Text('Share this app', style: TextStyle(fontSize: 16)),
               subtitle: Text(
-                'Send to someone or post the link!',
+                'Send or copy the link',
                 style: TextStyle(fontSize: 14),
               ),
               onTap: () {
@@ -41,7 +41,12 @@ class AboutPage extends StatelessWidget {
             )),
             _makeCard(ListTile(
               leading: Column(
-                children: [Icon(Icons.star,color: themeColor,)],
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: themeColor,
+                  )
+                ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               title: Text('Rate the App', style: TextStyle(fontSize: 16)),
@@ -55,10 +60,10 @@ class AboutPage extends StatelessWidget {
             )),
             _makeCard(ListTile(
               leading: Column(
-                children: [Icon(Icons.mail,color: themeColor)],
+                children: [Icon(Icons.mail, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              title: Text('Contact Us', style: TextStyle(fontSize: 16)),
+              title: Text('Contact', style: TextStyle(fontSize: 16)),
               subtitle: Text(
                 'For feedback, support, or enquiries',
                 style: TextStyle(fontSize: 14),
@@ -67,14 +72,11 @@ class AboutPage extends StatelessWidget {
             )),
             _makeCard(ListTile(
               leading: Column(
-                children: [Icon(Icons.info,color: themeColor)],
+                children: [Icon(Icons.info, color: themeColor)],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               title: Text('App Version', style: TextStyle(fontSize: 16)),
-              subtitle: Text(
-                '1.0.0',
-                style: TextStyle(fontSize: 14),
-              ),
+              subtitle: Text('1.0.0', style: TextStyle(fontSize: 14)),
             ))
           ]),
         ));

@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_habits/about_page.dart';
 import 'package:simple_habits/bloc/habit_bloc.dart';
+import 'package:simple_habits/db/database_providers.dart';
 
 import 'package:simple_habits/globals.dart';
 import 'package:simple_habits/create_habit.dart';
@@ -52,8 +53,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _dropdownValues = ['Pink', 'Green', 'Blue'];
-  String _currentDropdownValue;
+  final _colorValues = ['Pink', 'Green', 'Blue'];
+  String _currentColor;
 
   @override
   void initState() {
@@ -80,8 +81,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       themeColor = Color(value);
-      _currentDropdownValue = selection;
+      _currentColor = selection;
     });
+  }
+
+  _promptDeleteAll(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Delete All",
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+      onPressed: () {
+        DatabaseProvider.db.deleteAll().then(
+            (value) => BlocProvider.of<HabitBloc>(context).add(SetHabits([])));
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "Cancel",
+        style: TextStyle(color: themeColor),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text(
+          "Are you sure you want to delete all your habits?\n\nNothing will be recoverable."),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -103,9 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text('Simple Habits',
                               style: TextStyle(fontSize: 20))),
                       Expanded(
-                          flex: 4,
+                          flex: 3,
                           child: Container(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.only(bottom: 15),
                             child:
                                 Image(image: AssetImage('assets/img/icon.png')),
                           )),
@@ -151,16 +193,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                     fontFamily: 'Poppins',
                                   ),
                                   hint: Text("Select Color"),
-                                  value: _currentDropdownValue,
+                                  value: _currentColor,
                                   onChanged: (newValue) {
                                     setState(() {
-                                      _currentDropdownValue = newValue;
+                                      _currentColor = newValue;
                                       themeColor = toColor(newValue);
                                       setColor(
                                           toColor(newValue).value, newValue);
                                     });
                                   },
-                                  items: _dropdownValues.map((String value) {
+                                  items: _colorValues.map((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(
@@ -197,6 +239,33 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
             centerTitle: true,
             title: Text(widget.title),
+            actions: <Widget>[
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value.toLowerCase() == 'delete all') {
+                    _promptDeleteAll(context);
+                  } else if (value.toLowerCase() == 'new habit') {
+                    Navigator.of(context).push(_createRoute(CreateHabitScreen(
+                      Habit(),
+                      0,
+                    )));
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return {'Delete All', 'New Habit'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Center(
+                        child: Text(
+                          choice,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    );
+                  }).toList();
+                },
+              ),
+            ],
             bottom: TabBar(
               indicatorColor: themeColor,
               labelColor: themeColor,

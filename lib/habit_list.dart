@@ -55,14 +55,21 @@ class _HabitListState extends State<HabitList> {
                   Habit habit = habitList[index];
 
                   return HabitCard(
-                      key: ValueKey(habit.id),
+                      key: ValueKey((habit.id.toString() + habit.title)),
                       habit: habit,
                       deleteFunc: () => _removeHabit(habit.id));
                 },
                 itemCount: habitList.length,
               );
       },
-      listener: (BuildContext context, habitList) {},
+      listener: (BuildContext context, habitList) {
+        habitList.sort((a, b) {
+          var x = DateFormat.jm().parse(a.time);
+          var y = DateFormat.jm().parse(b.time);
+
+          return x.compareTo(y);
+        });
+      },
     );
   }
 
@@ -101,7 +108,7 @@ class _HabitListState extends State<HabitList> {
                           .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
                       1) {
                     return HabitCard(
-                        key: ValueKey(habit.id),
+                        key: ValueKey((habit.id.toString() + habit.title)),
                         habit: habit,
                         deleteFunc: () => _removeHabit(habit.id));
                   }
@@ -109,7 +116,14 @@ class _HabitListState extends State<HabitList> {
                 itemCount: habitList.length,
               );
       },
-      listener: (BuildContext context, habitList) {},
+      listener: (BuildContext context, habitList) {
+        habitList.sort((a, b) {
+          var x = DateFormat.jm().parse(a.time);
+          var y = DateFormat.jm().parse(b.time);
+
+          return x.compareTo(y);
+        });
+      },
     );
   }
 

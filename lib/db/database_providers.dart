@@ -97,6 +97,14 @@ class DatabaseProvider {
     );
   }
 
+  Future<int> deleteAll() async {
+    final db = await database;
+
+    return await db.delete(
+      TABLE_HABIT,
+    );
+  }
+
   Future<int> update(Habit habit) async {
     final db = await database;
 
