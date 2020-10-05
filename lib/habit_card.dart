@@ -60,7 +60,15 @@ class _HabitCard extends State<HabitCard> {
     // if it is a new day then it resets the checked status on habit
     if (today.day != DateTime.parse(prevDate).day) {
       if (_habit.isDone) {
-        _habit.isDone = false;
+        setState(() {
+          _habit.isDone = false;
+        });
+
+        DatabaseProvider.db.update(_habit).then(
+              (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+                UpdateHabit(_habit.id, _habit),
+              ),
+            );
       } else {
         prefs.setString('prevDate', today.toString());
       }
@@ -70,14 +78,16 @@ class _HabitCard extends State<HabitCard> {
 
     // if it's a monday then it resets all weekly progress
     if (today.weekday == DateTime.monday && !_habit.isDone) {
-      _habit.progress = 0;
-    }
+      setState(() {
+        _habit.progress = 0;
+      });
 
-    DatabaseProvider.db.update(_habit).then(
-          (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
-            UpdateHabit(_habit.id, _habit),
-          ),
-        );
+      DatabaseProvider.db.update(_habit).then(
+            (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
+              UpdateHabit(_habit.id, _habit),
+            ),
+          );
+    }
   }
 
   // checks selected weekdays and pushes weekly notifications for those days
@@ -230,7 +240,6 @@ class _HabitCard extends State<HabitCard> {
             // GestureDetector to edit onTap or long press to delete
             child: GestureDetector(
                 onTap: edit,
-                onLongPress: widget.deleteFunc,
                 child: Card(
                   elevation: 7,
                   child: Container(

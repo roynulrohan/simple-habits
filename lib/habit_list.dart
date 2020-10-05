@@ -51,16 +51,18 @@ class _HabitListState extends State<HabitList> {
                 textAlign: TextAlign.center,
               ))
             : ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, int index) {
                   Habit habit = habitList[index];
 
                   return HabitCard(
-                      habit: habit, deleteFunc: () => _removeHabit(habit.id));
+                      key: ValueKey(habit.id),
+                      habit: habit,
+                      deleteFunc: () => _removeHabit(habit.id));
                 },
                 itemCount: habitList.length,
               );
       },
-      listener: (BuildContext context, foodList) {},
+      listener: (BuildContext context, habitList) {},
     );
   }
 
@@ -89,7 +91,7 @@ class _HabitListState extends State<HabitList> {
                 textAlign: TextAlign.center,
               ))
             : ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, int index) {
                   Habit habit = habitList[index];
 
                   // returning habitCards if day matches
@@ -99,13 +101,15 @@ class _HabitListState extends State<HabitList> {
                           .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
                       1) {
                     return HabitCard(
-                        habit: habit, deleteFunc: () => _removeHabit(habit.id));
+                        key: ValueKey(habit.id),
+                        habit: habit,
+                        deleteFunc: () => _removeHabit(habit.id));
                   }
                 },
                 itemCount: habitList.length,
               );
       },
-      listener: (BuildContext context, foodList) {},
+      listener: (BuildContext context, habitList) {},
     );
   }
 
