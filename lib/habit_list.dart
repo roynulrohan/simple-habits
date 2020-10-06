@@ -78,12 +78,15 @@ class _HabitListState extends State<HabitList> {
     return BlocConsumer<HabitBloc, List<Habit>>(
       builder: (context, habitList) {
         // filtered list by matching day's to current day
-        var filteredList = habitList.where((element) =>
-            element.days
-                .split(',')
-                .map(int.parse)
-                .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
-            1);
+        List<Habit> filteredList = [];
+        filteredList = habitList
+            .where((element) =>
+                element.days
+                    .split(',')
+                    .map(int.parse)
+                    .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
+                1)
+            .toList();
 
         // first check if filtered list is empty to display text block
         return filteredList.isEmpty
@@ -99,21 +102,14 @@ class _HabitListState extends State<HabitList> {
               ))
             : ListView.builder(
                 itemBuilder: (context, int index) {
-                  Habit habit = habitList[index];
+                  Habit habit = filteredList[index];
 
-                  // returning habitCards if day matches
-                  if (habit.days
-                          .split(',')
-                          .map(int.parse)
-                          .toList()[dayCorrector(DateTime.now().weekday - 1)] ==
-                      1) {
-                    return HabitCard(
-                        key: ValueKey((habit.id.toString() + habit.title)),
-                        habit: habit,
-                        deleteFunc: () => _removeHabit(habit.id));
-                  }
+                  return HabitCard(
+                      key: ValueKey((habit.id.toString() + habit.title)),
+                      habit: habit,
+                      deleteFunc: () => _removeHabit(habit.id));
                 },
-                itemCount: habitList.length,
+                itemCount: filteredList.length,
               );
       },
       listener: (BuildContext context, habitList) {

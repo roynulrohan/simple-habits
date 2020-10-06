@@ -133,17 +133,18 @@ class _MyHomePageState extends State<MyHomePage> {
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: <Widget>[
+            children: [
               // DRAWER HEADER
               Container(
-                height: 100,
+                height: MediaQuery.of(context).size.height / 6,
                 child: DrawerHeader(
                   child: Container(
-                    padding: EdgeInsets.only(bottom: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Simple Habits', style: TextStyle(fontSize: 20)),
+                        Expanded(
+                            child: Text('Simple Habits',
+                                style: TextStyle(fontSize: 18))),
                       ],
                     ),
                   ),
