@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     // locking orientation to portrait only
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SystemChrome.setEnabledSystemUIOverlays([]);
+        
     return BlocProvider<HabitBloc>(
         create: (context) => HabitBloc(),
         child: DefaultTabController(
