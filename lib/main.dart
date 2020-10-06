@@ -70,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     flutterLocalNotificationsPlugin.initialize(initSetttings);
 
+    // get color preference
     _getColor();
   }
 
@@ -85,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // prompt for deleting all habits
   _promptDeleteAll(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(
@@ -159,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Column(
                     children: [
+                      // COLOR PICKER
                       Container(
                         padding: EdgeInsets.only(top: 10),
                         child: ListTile(
@@ -208,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         )),
                       ),
+                      // ABOUT TILE
                       Container(
                           padding: EdgeInsets.only(top: 10),
                           child: ListTile(

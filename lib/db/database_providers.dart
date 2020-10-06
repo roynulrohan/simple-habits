@@ -31,6 +31,7 @@ class DatabaseProvider {
     return _database;
   }
 
+  // create db
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
 
@@ -54,8 +55,9 @@ class DatabaseProvider {
         );
       },
     );
-  }
+  } 
 
+  // get all habits
   Future<List<Habit>> getHabits() async {
     final db = await database;
 
@@ -81,12 +83,14 @@ class DatabaseProvider {
     return habitList;
   }
 
+  // insert habit
   Future<Habit> insert(Habit habit) async {
     final db = await database;
     habit.id = await db.insert(TABLE_HABIT, habit.toMap());
     return habit;
   }
 
+  // delete habit
   Future<int> delete(int id) async {
     final db = await database;
 
@@ -97,6 +101,7 @@ class DatabaseProvider {
     );
   }
 
+  // delete all habits
   Future<int> deleteAll() async {
     final db = await database;
 
@@ -105,6 +110,7 @@ class DatabaseProvider {
     );
   }
 
+  // update given habit
   Future<int> update(Habit habit) async {
     final db = await database;
 
