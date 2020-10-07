@@ -37,8 +37,6 @@ class _HabitCard extends State<HabitCard> {
     if (_habit.reminders) {
       _setNotifications();
     }
-
-    checkDate();
   }
 
   @override
@@ -48,45 +46,6 @@ class _HabitCard extends State<HabitCard> {
     // if habit is being deleted then cancels all future notifications
     if (_habit.reminders) {
       _cancelNotifications();
-    }
-  }
-
-  // function that compares current date to date stored in prefs to know if it's a new day
-  void checkDate() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String prevDate = prefs.getString('prevDate') ?? DateTime.now().toString();
-    var today = DateTime.now();
-
-    // if it is a new day then it resets the checked status on habit
-    if (today.day != DateTime.parse(prevDate).day) {
-      if (_habit.isDone) {
-        setState(() {
-          _habit.isDone = false;
-        });
-
-        DatabaseProvider.db.update(_habit).then(
-              (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
-                UpdateHabit(_habit.id, _habit),
-              ),
-            );
-      } else {
-        prefs.setString('prevDate', today.toString());
-      }
-    } else {
-      prefs.setString('prevDate', prevDate.toString());
-    }
-
-    // if it's a monday then it resets all weekly progress
-    if (today.weekday == DateTime.monday && !_habit.isDone) {
-      setState(() {
-        _habit.progress = 0;
-      });
-
-      DatabaseProvider.db.update(_habit).then(
-            (storedHabit) => BlocProvider.of<HabitBloc>(context).add(
-              UpdateHabit(_habit.id, _habit),
-            ),
-          );
     }
   }
 
@@ -116,8 +75,6 @@ class _HabitCard extends State<HabitCard> {
 
   // called every time the check button is pressed
   void _incrementProgress() {
-    // first calls checkDate to see if it's a new day or not
-    checkDate();
     setState(() {});
     // switches state and increments or decrements based on case and then writes to database
     if (_habit.isDone) {

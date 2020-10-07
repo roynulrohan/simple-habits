@@ -55,10 +55,11 @@ class DatabaseProvider {
         );
       },
     );
-  } 
+  }
 
-  // get all habits
-  Future<List<Habit>> getHabits() async {
+  // get all habits - takes parameters to see if weekly or daily progress needs to reset
+  Future<List<Habit>> getHabits(
+      {bool uncheck = false, bool resetProgress = false}) async {
     final db = await database;
 
     var habits = await db.query(TABLE_HABIT, columns: [
@@ -76,6 +77,24 @@ class DatabaseProvider {
 
     habits.forEach((element) {
       Habit habit = Habit.fromMap(element);
+
+      // reset daily
+      if (uncheck) {
+        habit.isDone = false;
+      }
+
+      // reset weekly
+      if (resetProgress) {
+        habit.progress = 0;
+      }
+
+      // update
+      db.update(
+        TABLE_HABIT,
+        habit.toMap(),
+        where: "id = ?",
+        whereArgs: [habit.id],
+      );
 
       habitList.add(habit);
     });

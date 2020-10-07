@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_habits/bloc/habit_bloc.dart';
 import 'package:simple_habits/db/database_providers.dart';
 import 'package:simple_habits/globals.dart';
@@ -21,12 +22,52 @@ class _HabitListState extends State<HabitList> {
   void initState() {
     super.initState();
 
-    // get habits from db and add to blocprovider
-    DatabaseProvider.db.getHabits().then(
-      (habitList) {
-        BlocProvider.of<HabitBloc>(context).add(SetHabits(habitList));
-      },
-    );
+    // checks date then gets habitList from db and adds to BlocProvider based on return statement
+    // to see if weekly and/or daily progress needs to reset
+    checkDate().then((value) {
+      if (value == 1) {
+        DatabaseProvider.db.getHabits(uncheck: true).then(
+          (habitList) {
+            BlocProvider.of<HabitBloc>(context).add(SetHabits(habitList));
+          },
+        );
+      } else if (value == 2) {
+        DatabaseProvider.db.getHabits(uncheck: true, resetProgress: true).then(
+          (habitList) {
+            BlocProvider.of<HabitBloc>(context).add(SetHabits(habitList));
+          },
+        );
+      } else {
+        DatabaseProvider.db.getHabits().then(
+          (habitList) {
+            BlocProvider.of<HabitBloc>(context).add(SetHabits(habitList));
+          },
+        );
+      }
+    });
+  }
+
+  // function that compares current date to date stored in prefs to know if it's a new day
+  Future<int> checkDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String prevDate = prefs.getString('prevDate') ?? DateTime.now().toString();
+    var today = DateTime.now();
+
+    // if it is a new day then it resets the checked status on habit
+    if (today.day != DateTime.parse(prevDate).day) {
+      prefs.setString('prevDate', today.toString());
+
+      // if it's a monday then it resets all weekly progress
+      if (today.weekday == DateTime.monday) {
+        return 2;
+      } else {
+        return 1;
+      }
+    } else {
+      prefs.setString('prevDate', prevDate.toString());
+    }
+
+    return 0;
   }
 
   // function to delete habit
