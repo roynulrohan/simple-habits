@@ -1,4 +1,4 @@
-# simple_habits
+# simple-habits
 
 A Habit tracker app made with Flutter. Optimized for Android only for now.
 
