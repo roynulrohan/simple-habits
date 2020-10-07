@@ -69,7 +69,7 @@ Future<void> scheduleNotification(
   var timeOfDay = TimeOfDay.fromDateTime(DateFormat.jm().parse(time));
   var scheduledNotificationDateTime = Time(timeOfDay.hour, timeOfDay.minute, 0);
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'channel id', 'channel name', 'channel description',
+      'reminders', 'Reminders', 'Habit reminder notifications',
       icon: 'notification_icon',
       largeIcon: DrawableResourceAndroidBitmap('app_icon'),
       autoCancel: true);

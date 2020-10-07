@@ -93,9 +93,7 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
   // time picker
   Widget _selectTime() {
     return CupertinoDatePicker(
-      initialDateTime: widget.mode == 0
-          ? DateTime(0, 0, 0, _pickedTime.hour, 0)
-          : DateTime(0, 0, 0, _pickedTime.hour, _pickedTime.minute),
+      initialDateTime: DateTime(0, 0, 0, _pickedTime.hour, _pickedTime.minute),
       onDateTimeChanged: (DateTime newdate) {
         setState(() {
           _pickedTime = TimeOfDay.fromDateTime(newdate);
