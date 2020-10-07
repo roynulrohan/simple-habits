@@ -71,12 +71,46 @@ class _HabitListState extends State<HabitList> {
   }
 
   // function to delete habit
-  void _removeHabit(int key) {
-    DatabaseProvider.db.delete(key).then((_) {
-      BlocProvider.of<HabitBloc>(context).add(
-        DeleteHabit(key),
-      );
-    });
+  void _removeHabit(BuildContext context, Habit habit) {
+    Widget confirmButton = FlatButton(
+      child: Text("Delete",
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+      onPressed: () {
+        DatabaseProvider.db.delete(habit.id).then((_) {
+          BlocProvider.of<HabitBloc>(context).add(
+            DeleteHabit(habit.id),
+          );
+        });
+        Navigator.pop(context);
+      },
+    );
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "Cancel",
+        style: TextStyle(color: themeColor),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Deleting Habit"),
+      content: Text("Are you sure you want to delete\n\"${habit.title}\"?"),
+      actions: [
+        confirmButton,
+        cancelButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   // widget with full list of all HabitCards
@@ -100,7 +134,7 @@ class _HabitListState extends State<HabitList> {
                   return HabitCard(
                       key: ValueKey((habit.id.toString() + habit.title)),
                       habit: habit,
-                      deleteFunc: () => _removeHabit(habit.id));
+                      deleteFunc: () => _removeHabit(context, habit));
                 },
                 itemCount: habitList.length,
               );
@@ -153,7 +187,7 @@ class _HabitListState extends State<HabitList> {
                   return HabitCard(
                       key: ValueKey((habit.id.toString() + habit.title)),
                       habit: habit,
-                      deleteFunc: () => _removeHabit(habit.id));
+                      deleteFunc: () => _removeHabit(context, habit));
                 },
                 itemCount: filteredList.length,
               );

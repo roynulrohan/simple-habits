@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     // locking orientation to portrait only
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-        
+
     return BlocProvider<HabitBloc>(
         create: (context) => HabitBloc(),
         child: DefaultTabController(
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // prompt for deleting all habits
   _promptDeleteAll(BuildContext context) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget confirmButton = FlatButton(
       child: Text("Delete All",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
       onPressed: () {
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget cancelButton = FlatButton(
       child: Text(
         "Cancel",
         style: TextStyle(color: themeColor),
@@ -114,8 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
       content: Text(
           "Are you sure you want to delete all your habits?\n\nNothing will be recoverable."),
       actions: [
+        confirmButton,
         cancelButton,
-        continueButton,
       ],
     );
 
