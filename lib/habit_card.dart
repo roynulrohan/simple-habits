@@ -1,13 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_habits/bloc/habit_bloc.dart';
-
 import 'package:simple_habits/create_habit.dart';
 import 'package:simple_habits/db/database_providers.dart';
 import 'package:simple_habits/globals.dart';

@@ -2,13 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_habits/about_page.dart';
 import 'package:simple_habits/bloc/habit_bloc.dart';
 import 'package:simple_habits/db/database_providers.dart';
-
 import 'package:simple_habits/globals.dart';
 import 'package:simple_habits/create_habit.dart';
 import 'package:simple_habits/habit_list.dart';

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_habits/bloc/habit_bloc.dart';
+import 'package:simple_habits/db/database_providers.dart';
 import 'package:simple_habits/globals.dart';
 import 'package:simple_habits/models/habit.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 
-import 'db/database_providers.dart';
 
 class CreateHabitScreen extends StatefulWidget {
   CreateHabitScreen(this.habit, this.mode,

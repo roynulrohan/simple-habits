@@ -39,7 +39,8 @@ class AboutPage extends StatelessWidget {
                 style: TextStyle(fontSize: 12),
               ),
               onTap: () {
-                Share.share('https://example.com');
+                Share.share(
+                    'https://play.google.com/store/apps/details?id=com.roynulrohan.simple_habits');
               },
             )),
             _makeCard(ListTile(
