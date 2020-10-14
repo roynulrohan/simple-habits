@@ -90,3 +90,8 @@ Future<void> scheduleNotification(
 Future<void> cancelNotification(int channel) async {
   await flutterLocalNotificationsPlugin.cancel(channel);
 }
+
+// function to cancel all nofitications
+Future<void> cancelAllNotifications() async {
+  await flutterLocalNotificationsPlugin.cancelAll();
+}

@@ -93,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onPressed: () {
         DatabaseProvider.db.deleteAll().then(
             (value) => BlocProvider.of<HabitBloc>(context).add(SetHabits([])));
+        cancelAllNotifications();
         Navigator.pop(context);
       },
     );

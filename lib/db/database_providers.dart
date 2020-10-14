@@ -35,7 +35,7 @@ class DatabaseProvider {
 
     return await openDatabase(
       join(dbPath, 'habitDB.db'),
-      version: 1,
+      version: 3,
       onCreate: (Database database, int version) async {
         print("Creating habit table");
 
