@@ -80,7 +80,7 @@ class AboutPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               title: Text('App Version', style: TextStyle(fontSize: 14)),
-              subtitle: Text('1.0.0', style: TextStyle(fontSize: 12)),
+              subtitle: Text('1.0.5', style: TextStyle(fontSize: 12)),
             ))
           ]),
         ));

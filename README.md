@@ -2,6 +2,8 @@
 
 A Habit tracker app made with Flutter. Optimized for Android only for now.
 
+Play Store: https://play.google.com/store/apps/details?id=com.roynulrohan.simple_habits
+
 ## Description
 
 The app lets you create habits, set weekly goals, and track daily progress. It is a very simple idea but it's not meant to

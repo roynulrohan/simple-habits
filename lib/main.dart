@@ -137,18 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               // DRAWER HEADER
               Container(
-                height: MediaQuery.of(context).size.height / 6,
+                height: MediaQuery.of(context).size.height / 8,
                 child: DrawerHeader(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Simple Habits',
-                                style: TextStyle(fontSize: 18))),
-                      ],
-                    ),
-                  ),
+                  padding: EdgeInsets.all(0),
                   decoration: BoxDecoration(
                     color: themeColor,
                   ),
